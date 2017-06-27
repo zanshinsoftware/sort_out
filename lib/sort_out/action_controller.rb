@@ -11,20 +11,20 @@ module SortOut
       def store_sortable(options = {})
         SortOut.action_controller_options = options.reverse_merge get: :get_sortable, set: :set_sortable
 
-        define_method :store_sortable_before_filter do
+        define_method :store_sortable_before_action do
           if SortOut.sort.present? || SortOut.direction.present?
             send SortOut.action_controller_options[:set], { sort: SortOut.sort, direction: SortOut.direction }
           end
         end
 
-        before_filter :get_sort_and_direction, only: [ :index ]
-        before_filter :store_sortable_before_filter, only: [ :index ]
+        before_action :get_sort_and_direction, only: [ :index ]
+        before_action :store_sortable_before_action, only: [ :index ]
       end
 
       def set_localize_sortable(*actions)
-        skip_before_filter :get_sort_and_direction, :store_sortable_before_filter
-        before_filter :get_sort_and_direction, only: actions.flatten
-        before_filter :store_sortable_before_filter, only: actions.flatten
+        skip_before_action :get_sort_and_direction, :store_sortable_before_action
+        before_action :get_sort_and_direction, only: actions.flatten
+        before_action :store_sortable_before_action, only: actions.flatten
       end
     end
 
