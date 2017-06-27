@@ -18,7 +18,7 @@ module SortOut
         end
       end
       #▴ ▾ ▼ ▲
-      link_to title, params.merge({ sort: column, direction: direction }.merge(options[:params]))
+      link_to title, params.permit!.merge({ sort: column, direction: direction }.merge(options[:params]))
     end
 
     def sortable_fields
