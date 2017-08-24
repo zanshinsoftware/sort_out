@@ -2,7 +2,8 @@
 module SortOut
   module Helpers
     def sortable(column, title = nil, options = {})
-      options.reverse_merge! default: false, direction: true, params: {}
+      options.reverse_merge! default: false, direction: true, params: {}, html: {}
+      html_options = options.delete :html
       title ||= column.titleize
       direction = nil
       if column.to_s == SortOut.sort || (options[:default] and SortOut.sort.blank?)
@@ -18,7 +19,7 @@ module SortOut
         end
       end
       #▴ ▾ ▼ ▲
-      link_to title, params.permit!.merge({ sort: column, direction: direction }.merge(options[:params]))
+      link_to title, params.permit!.merge({ sort: column, direction: direction }.merge(options[:params])), html_options
     end
 
     def sortable_fields
@@ -29,7 +30,7 @@ module SortOut
     end
 
     def sortable_current(columns, default, options)
-      options.reverse_merge! model_name: controller_name.singularize
+      options.reverse_merge! model_name: controller_name.singularize, direction: true
 
       column = if SortOut.sort.present? and columns.include? SortOut.sort.to_sym
         SortOut.sort.to_sym
@@ -37,17 +38,21 @@ module SortOut
         default.first
       end
 
-      title = tl("#{options[:model_name]}.#{column.to_s}")
+      title = tl(options[:model_name], column)
 
-      if SortOut.direction.blank?
-        if default[1].to_s == 'desc' and SortOut.sort.blank?
-          title << '▲'
+      if options[:direction]
+        if SortOut.direction.blank?
+          if default[1].to_s == 'desc' and SortOut.sort.blank?
+            title << '▲'
+          else
+            title << '▼'
+          end
         else
-          title << '▼'
+          title << '▲'
         end
-      else
-        title << '▲'
       end
+
+      title
     end
   end
 end
