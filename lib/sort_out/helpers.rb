@@ -9,13 +9,13 @@ module SortOut
       if column.to_s == SortOut.sort || (options[:default] and SortOut.sort.blank?)
         if SortOut.direction.blank?
           if options[:default].to_s == 'desc' and SortOut.sort.blank?
-            title << '▲' if options[:direction]
+            title += '▲' if options[:direction]
           else
             direction = "desc"
-            title << '▼' if options[:direction]
+            title += '▼' if options[:direction]
           end
         else
-          title << '▲' if options[:direction]
+          title += '▲' if options[:direction]
         end
       end
       #▴ ▾ ▼ ▲
@@ -43,12 +43,12 @@ module SortOut
       if options[:direction]
         if SortOut.direction.blank?
           if default[1].to_s == 'desc' and SortOut.sort.blank?
-            title << '▲'
+            title += '▲'
           else
-            title << '▼'
+            title += '▼'
           end
         else
-          title << '▲'
+          title += '▲'
         end
       end
 
