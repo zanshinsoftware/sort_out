@@ -15,10 +15,10 @@ module SortOut
       
       sort_column = sortable_column(column).to_s.downcase
       sort_column << sortable_direction(column, direction)
-
-      model = self.order(sort_column)
+      
+      model = self.order(Arel.sql(sort_column))
       @sortable_options[:after].each do |order|
-        model = model.order(order.join(' ')) if order[0].to_s != sort_column
+        model = model.order(Arel.sql(order.join(' '))) if order[0].to_s != sort_column
       end
       model
     end
